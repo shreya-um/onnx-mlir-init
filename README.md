@@ -23,3 +23,6 @@ Use output array and get post processed image / data for all 4 models and comapr
 
 ## Ref for docker folder structure
 ![image](https://github.com/shreya-um/onnx-mlir-init-test/assets/155458601/22d8e1bc-73ec-4bf7-9ade-d6674ae6cffe)
+
+run `./delete_all_files_con.sh` to delete all **generated** files from docker container
+run `./delete_all_files_host.sh` to delete all **generated** files from local
