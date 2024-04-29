@@ -7,7 +7,7 @@
 // Declare the inference entry point.
 extern "C" OMTensorList *run_main_graph(OMTensorList *);
 
-static float img_data[] = {...};
+static float rgb_data_tensor[] = {...};
 
 int main() {
   // Create an input tensor list of 1 tensor.
