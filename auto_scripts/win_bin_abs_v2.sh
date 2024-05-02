@@ -11,7 +11,7 @@ if [ ! -f "../onnx/$filename.onnx" ]; then
     exit 1
 fi
 
-set_onnx-mlir_env_vars() {
+set_onnx_mlir_env_vars() {
     cd onnx-mlir
     echo "exporting env varibales"
     export ONNX_MLIR_ROOT=$(pwd)
@@ -25,7 +25,7 @@ set_onnx-mlir_env_vars() {
     # mkdir extra_lib
 }
 
-generate_onnx-mlir() {
+generate_onnx_mlir() {
     filename="$1"
 
     cd automation/onnx-mlir_files &&
