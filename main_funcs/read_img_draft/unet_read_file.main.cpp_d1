@@ -1,0 +1,115 @@
+#include <iostream>
+#include <vector>
+#include <cstdint>
+
+#include "OnnxMlirRuntime.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
+// Declare the inference entry point.
+extern "C" OMTensorList *run_main_graph(OMTensorList *);
+
+// static float img_data[] = {...};
+
+int main() {
+  int width, height, bpp;
+
+//read img from file
+  uint8_t* rgb_image = stbi_load("unet.png", &width, &height, &bpp, 3);
+  // if (rgb_image != nullptr) {
+        // Print width and height
+        std::cout << "Image Width: " << width << std::endl;
+        std::cout << "Image Height: " << height << std::endl;
+        std::cout << "Image bpp: " << bpp << std::endl;
+
+        // Print image data
+        // std::cout << "Image Data:" << std::endl;
+        // for (int y = 0; y < height; ++y) {
+        //     for (int x = 0; x < width * 3; ++x) {
+        //         std::cout << static_cast<int>(rgb_image[y * width * 3 + x]) << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
+  // }
+
+    int tensor_size = width * height * 3;
+    float* rgb_data_tensor = new float[tensor_size];
+
+    //check if Convert uint8_t to float is required or not... 
+    for (int i = 0; i < tensor_size; ++i) {
+        rgb_data_tensor[i] = static_cast<float>(rgb_image[i]); // Normalize to [0, 1]
+        std::cout << rgb_data_tensor[i] << " \n";
+    }
+
+  // Create an input tensor list of 1 tensor.
+  int inputNum = 1;
+  OMTensor *inputTensors[inputNum];
+  // The first input is of tensor<1x1x28x28xf32>.
+  int64_t rank = 4;
+  int64_t shape[] = {3, 256, 256};
+
+  // Create a tensor using omTensorCreateWithOwnership (returns a pointer to the OMTensor).
+  // When the parameter, owning is set to "true", the OMTensor will free the data
+  // pointer (img_data) upon destruction. If owning is set to false, the data pointer will
+  // not be freed upon destruction.
+  OMTensor *tensor = omTensorCreateWithOwnership(rgb_data_tensor, shape, rank, ONNX_TYPE_FLOAT, /*owning=*/true);
+
+  // Create a tensor list using omTensorListCreate (returns a pointer to the OMTensorList).
+  inputTensors[0] = tensor;
+  OMTensorList *tensorListIn = omTensorListCreate(inputTensors, inputNum);
+
+  // Compute outputs.
+  OMTensorList *tensorListOut = run_main_graph(tensorListIn);
+
+  // Extract the output. The model defines one output of type tensor<1x10xf32>.
+  OMTensor *y = omTensorListGetOmtByIndex(tensorListOut, 0);
+  float *prediction = (float *)omTensorGetDataPtr(y);
+
+  //check if need  this conversion or not
+  // uint8_t* prediction_uint8 = new uint8_t[width * height];
+  //   for (int i = 0; i < width * height; ++i) {
+  //       prediction_uint8[i] = static_cast<uint8_t>(prediction[i]);
+  //   }
+
+    //save img
+//   stbi_write_png("unet_output.png", width, height, 1, prediction_uint8, width * 1);
+// printf("file saved to output");
+
+//   uint8_t* rgb_image_output = stbi_load("../bin/unet_output.png", &width, &height, &bpp, 1);
+//   for (int y = 0; y < height; ++y) {
+//             for (int x = 0; x < width * 1; ++x) {
+//               if(static_cast<int>(rgb_image_output[y * width * 1 + x]) ==1){
+//                 // std::cout << y <<" \n";
+//                 // std::cout << x << "\n";
+//                 // std::cout << static_cast<int>(rgb_image_output[y * width * 1 + x]) << " \n";
+//               }
+//             }
+//             // std::cout << std::endl;
+//         }
+
+  // // Analyze the output.
+  // int digit = -1;
+  // float prob = 0.;
+  // for (int i = 0; i < 256*256; i++) {
+  //   printf("prediction[%d] = %f\n", i, prediction[i]);
+  // }
+
+  // for (int i = 0; i < 256; ++i) {
+  //       for (int j = 0; j < 256; ++j) {
+  //           printf("prediction[%d][%d] = %f\n", i,j, prediction[i * 256 + j]);
+  //       }
+  // }
+  // The OMTensorListDestroy will free all tensors in the OMTensorList
+  // upon destruction. It is important to note, that every tensor will
+  // be destroyed. To free the OMTensorList data structure but leave the
+  // tensors as is, use OMTensorListDestroyShallow instead.
+  // omTensorListDestroy(tensorListOut);
+ //  omTensorListDestroy(tensorListIn);
+
+  // printf("The digit is %d\n", digit);
+  return 0;
+}

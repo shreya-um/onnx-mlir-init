@@ -141,8 +141,8 @@ copy_files_to_container() {
     echo "Files copied to container."
     echo "======================================================================================="
     #   docker cp ../inputs/"$filename".png  $container_id:/workdir/onnx-mlir/automation/main_files
-    #   docker cp ../extra_lib/stb_image_write.h  $container_id:/workdir/onnx-mlir/automation/main_files
-    #   docker cp ../extra_lib/stb_image.h  $container_id:/workdir/onnx-mlir/automation/main_files
+    #   docker cp ../main_funcs/stb_image_write.h  $container_id:/workdir/onnx-mlir/automation/main_files
+    #   docker cp ../main_funcs/stb_image.h  $container_id:/workdir/onnx-mlir/automation/main_files
 }
 
 start_container_get_bin() {
