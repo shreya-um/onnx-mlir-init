@@ -26,3 +26,17 @@ Use output array and get post processed image / data for all 4 models and comapr
 
 run `./delete_all_files_con.sh` to delete all **generated** files from docker container and 
 run `./delete_all_files_host.sh` to delete all **generated** files from local
+
+## to read numpy bytes
+save numpy bites in google colab 
+`
+file_path = "/content/drive/My Drive/<model>.bin"  # Change the file path as needed
+# np.save(file_path, tensor_data.numpy().tobytes())
+
+
+with open(file_path, "wb") as f:
+    # Write the data to the file
+    f.write(tensor_data.numpy().tobytes())
+  `
+copy <model>.bin file and paste it in bin folder
+  
