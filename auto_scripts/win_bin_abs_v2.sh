@@ -11,7 +11,7 @@ if [ ! -f "../onnx/$filename.onnx" ]; then
     exit 1
 fi
 
-set_onnx-mlir_env_vars() {
+set_onnx_mlir_env_vars() {
     cd onnx-mlir
     echo "exporting env varibales"
     export ONNX_MLIR_ROOT=$(pwd)
@@ -25,7 +25,7 @@ set_onnx-mlir_env_vars() {
     # mkdir extra_lib
 }
 
-generate_onnx-mlir() {
+generate_onnx_mlir() {
     filename="$1"
 
     cd automation/onnx-mlir_files &&
@@ -82,10 +82,10 @@ generate_bin() {
 gen_bin_conatiner() {
     filename="$1"
     skip_till="$2"
-    set_onnx-mlir_env_vars
+    set_onnx_mlir_env_vars
 
     if [ "$skip_till" != "bin" ]; then
-    generate_onnx-mlir $filename
+    generate_onnx_mlir $filename
     generate_llvm_IR $filename
     run_opt_llvm_IR $filename
     generate_asm $filename
@@ -152,7 +152,7 @@ start_container_get_bin() {
       docker start "$container_id"
     echo "======================================================================================="
     export filename="$filename"
-    # $(declare -f gen_bin_conatiner set_onnx-mlir_env_vars generate_onnx-mlir generate_llvm_IR run_opt_llvm_IR generate_asm generate_bin); gen_bin_conatiner '"$filename"' '"$skipTill"'
+    # $(declare -f gen_bin_conatiner set_onnx_mlir_env_vars generate_onnx_mlir generate_llvm_IR run_opt_llvm_IR generate_asm generate_bin); gen_bin_conatiner '"$filename"' '"$skipTill"'
       docker exec -it $first_container_id /bin/bash -c '
     filename="$1"
     skip_till="$2"
@@ -192,7 +192,7 @@ start_container_get_bin() {
     cd /workdir/onnx-mlir/automation/obj_files/O3
     ls /workdir/onnx-mlir/automation/llvm-IR_files/O3
 
-    generate_onnx-mlir "$filename"
+    generate_onnx_mlir "$filename"
         generate_llvm_IR "$filename"
         run_opt_llvm_IR "$filename"
     fi
