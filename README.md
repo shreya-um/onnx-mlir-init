@@ -29,7 +29,7 @@ run `./delete_all_files_host.sh` to delete all **generated** files from local
 
 ## to read numpy bytes
 save numpy bites in google colab 
-`
+```
 file_path = "/content/drive/My Drive/<model>.bin"  # Change the file path as needed
 # np.save(file_path, tensor_data.numpy().tobytes())
 
@@ -37,6 +37,6 @@ file_path = "/content/drive/My Drive/<model>.bin"  # Change the file path as nee
 with open(file_path, "wb") as f:
     # Write the data to the file
     f.write(tensor_data.numpy().tobytes())
-  `
-copy <model>.bin file and paste it in bin folder
+  ```
+copy <model>.bin file and paste it in bin folder/ folder in which all excutable binary will be saved and excuted from.
   
